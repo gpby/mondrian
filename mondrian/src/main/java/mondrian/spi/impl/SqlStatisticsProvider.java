@@ -147,9 +147,17 @@ public class SqlStatisticsProvider implements StatisticsProvider {
         String exprString = dialect.quoteIdentifier(column);
         if (dialect.allowsCountDistinct()) {
             // e.g. "select count(distinct product_id) from product"
-            buf.append("select count(distinct ")
-                .append(exprString)
-                .append(") from ");
+            if (dialect.getDatabaseProduct() == Dialect.DatabaseProduct.CLICKHOUSE)
+            {
+                buf.append("select uniqExact( ")
+                        .append(exprString)
+                        .append(") from ");
+            }
+            else {
+                buf.append("select count(distinct ")
+                        .append(exprString)
+                        .append(") from ");
+            }
             dialect.quoteIdentifier(buf, schema, table);
             return buf.toString();
         } else if (dialect.allowsFromQuery()) {

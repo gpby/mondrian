@@ -253,12 +253,74 @@ public abstract class RolapAggregator
             };
         };
 
+    public static final RolapAggregator UniqCount =
+            new RolapAggregator("uniq-count", index++, true) {
+                public Aggregator getRollup() {
+                    // Distinct counts cannot always be rolled up, when they can,
+                    // it's using Sum.
+                    return Sum;
+                }
+
+                public RolapAggregator getNonDistinctAggregator() {
+                    return Count;
+                }
+
+                public Object aggregate(
+                        Evaluator evaluator, TupleList members, Calc exp)
+                {
+                    throw new UnsupportedOperationException();
+                }
+
+                public String getExpression(String operand) {
+                    return "uniq(" + operand + ")";
+                }
+
+                public boolean supportsFastAggregates(
+                        mondrian.spi.Dialect.Datatype dataType)
+                {
+                    // We can't rollup using the raw data, because this is
+                    // a distinct-count operation.
+                    return false;
+                };
+            };
+
+    public static final RolapAggregator UniqExact =
+            new RolapAggregator("uniq-exact", index++, true) {
+                public Aggregator getRollup() {
+                    // Distinct counts cannot always be rolled up, when they can,
+                    // it's using Sum.
+                    return Sum;
+                }
+
+                public RolapAggregator getNonDistinctAggregator() {
+                    return Count;
+                }
+
+                public Object aggregate(
+                        Evaluator evaluator, TupleList members, Calc exp)
+                {
+                    throw new UnsupportedOperationException();
+                }
+
+                public String getExpression(String operand) {
+                    return "uniqExact(" + operand + ")";
+                }
+
+                public boolean supportsFastAggregates(
+                        mondrian.spi.Dialect.Datatype dataType)
+                {
+                    // We can't rollup using the raw data, because this is
+                    // a distinct-count operation.
+                    return false;
+                };
+            };
+
     /**
      * List of all valid aggregation operators.
      */
     public static final EnumeratedValues<RolapAggregator> enumeration =
         new EnumeratedValues<RolapAggregator>(
-            new RolapAggregator[] {Sum, Count, Min, Max, Avg, DistinctCount});
+            new RolapAggregator[] {Sum, Count, Min, Max, Avg, DistinctCount, UniqCount, UniqExact});
 
     /**
      * This is the base class for implementing aggregators over sum and

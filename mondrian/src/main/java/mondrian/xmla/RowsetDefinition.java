@@ -753,7 +753,7 @@ public enum RowsetDefinition {
             MdschemaHierarchiesRowset.DimensionIsVisible,
             MdschemaHierarchiesRowset.HierarchyOrdinal,
             MdschemaHierarchiesRowset.DimensionIsShared,
-            MdschemaHierarchiesRowset.HierarchyIsVisibile,
+            MdschemaHierarchiesRowset.HierarchyIsVisible,
             MdschemaHierarchiesRowset.HierarchyOrigin,
             MdschemaHierarchiesRowset.DisplayFolder,
             MdschemaHierarchiesRowset.CubeSource,
@@ -4729,7 +4729,7 @@ TODO: see above
                 Column.NOT_RESTRICTION,
                 Column.REQUIRED,
                 "A Boolean that indicates whether the parent dimension is visible.");
-        private static final Column HierarchyIsVisibile =
+        private static final Column HierarchyIsVisible =
             new Column(
                 "HIERARCHY_IS_VISIBLE",
                 Type.Boolean,
@@ -4946,7 +4946,7 @@ TODO: see above
 
             row.set(DimensionIsVisible.name, dimension.isVisible());
 
-            row.set(HierarchyIsVisibile.name, hierarchy.isVisible());
+            row.set(HierarchyIsVisible.name, hierarchy.isVisible());
             row.set(HierarchyVisibility.name, hierarchy.isVisible()?1:2);
 
             row.set(HierarchyOrigin.name, 0);

@@ -90,6 +90,11 @@ public abstract class AbstractQuerySpec implements QuerySpec {
         if (countOnly) {
             sqlQuery.addSelect("count(*)", SqlStatement.Type.INT);
         }
+        // Add fact table first
+        if (arity > 0) {
+            star.getFactTable().addToFrom(sqlQuery, false, false);
+        }
+
         for (int i = 0; i < arity; i++) {
             RolapStar.Column column = columns[i];
             RolapStar.Table table = column.getTable();
@@ -360,6 +365,10 @@ public abstract class AbstractQuerySpec implements QuerySpec {
                 : predicate.getConstrainedColumnList())
             {
                 final RolapStar.Table table = column.getTable();
+                if (table.getParentTable() != null)
+                {
+                    star.getFactTable().addToFrom(sqlQuery, false, false);
+                }
                 table.addToFrom(sqlQuery, false, true);
             }
             StringBuilder buf = new StringBuilder();
